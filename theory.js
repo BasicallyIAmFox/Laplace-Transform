@@ -23,33 +23,6 @@ var sDomainTime = 1;
 var automationEnabled = false;
 var isChallengeCleared = [0, 0, 0, 0, 0, 0, 0]
 
-
-// UI Sliders
-var tDomainSlider = ui.createSlider({
-    value: tDomainTime,
-    onValueChanged: () => {
-        tDomainTime = Math.round(tDomainSlider.value)
-    }
-}); 
-var sDomainSlider = ui.createSlider({
-    value: sDomainTime,
-    onValueChanged: () => {
-        sDomainTime = Math.round(sDomainSlider.value)
-    }
-});
-
-tDomainSlider.maximum = 60;
-tDomainSlider.minimum = 1;
-sDomainSlider.maximum = 60;
-sDomainSlider.minimum = 1;
-
-var autoLaplaceToggle = ui.createSwitch({
-    onToggled: () => {
-        automationEnabled = !automationEnabled;
-        timer = 0;
-    }
-});
-
 var init = () => {
     currency = theory.createCurrency();
     laplaceCurrency = theory.createCurrency("Λ", "\\Lambda");
@@ -246,7 +219,7 @@ var init = () => {
                 }
             });
             this.pauseSwitch = ui.createSwitch({
-                isToggled: this.isPaused,
+                isToggled: () => this.isPaused,
                 onToggled: () => this.isPaused = !this.isPaused
             })
             this.menu = this.createTSliderMenu()
@@ -292,8 +265,8 @@ var init = () => {
             this.lambda = {
                 internalId: 6,
                 description: (_) => Utils.getMath("\\lambda = (-3)^{" + this.lambda.upgrade.level + "}"),
-                info: (amount) => Utils.getMathTo("\\lambda = " + this.getLambda(this.c2s.upgrade.level), 
-                "\\lambda = " + this.getLambda(this.c2s.upgrade.level + amount)),
+                info: (amount) => Utils.getMathTo("\\lambda = " + this.getLambda(this.lambda.upgrade.level), 
+                "\\lambda = " + this.getLambda(this.lambda.upgrade.level + amount)),
                 costModel: new ExponentialCost(10, Math.log2(10)),
                 laplaceUpgrade: true    
             }
@@ -339,13 +312,15 @@ var init = () => {
         getIQs() { return this.denominator != BigNumber.ZERO? this.denominator.pow(-1) * (-1 * this.imagS) : BigNumber.ZERO}
         tick(elapsedTime, _) {
             let dt = elapsedTime;
-            if (laplaceActive && !this.isPaused){
+            if (laplaceActive){
                 this.realS = parseFloat(Math.cos(2 * Math.PI * this.t).toFixed(3));
                 this.imagS = parseFloat(Math.sin(2 * Math.PI * this.t).toFixed(3));
                 this.denominator = BigNumber.from((1 + this.realS) ** 2 + this.imagS ** 2);
-                this.R += this.getC1S(this.c1s.upgrade.level) * (1 - this.getRQs()) * dt;
-                this.I += this.getC2S(this.c2s.upgrade.level) / (1.1 - this.getIQs()) * dt;
-                this.laplaceCurrency += this.R * this.I * this.getC3(this.c3.upgrade.level) * dt;
+                if (!this.isPaused) {
+                    this.R += this.getC1S(this.c1s.upgrade.level) * (1 - this.getRQs()) * dt;
+                    this.I += this.getC2S(this.c2s.upgrade.level) / (1.1 - this.getIQs()) * dt;
+                    this.laplaceCurrency += this.R * this.I * this.getC3(this.c3.upgrade.level) * dt;
+                }
             }
             else if (!this.isPaused){
                 this.currency += this.getC1(this.c1.upgrade.level) * this.getC2(this.c2.upgrade.level) 
@@ -1344,7 +1319,7 @@ var init = () => {
             let c1ExponentText = (c1Exponent.level > 0) ? "^{" + (1 + c1Exponent.level * 0.05).toString() + "}" : "";
             let lambdaExponentText = (this.lambda.upgrade.level > 0) ? "^{" + (1 + this.lambdaExponent.upgrade.level * 0.05).toFixed(2) + "}" : "";
             let omegaExponentText = isChallengeCleared[3] == 1? "^{" + (1 + isChallengeCleared[3] * (1 + this.t).log10() / 450).toNumber().toFixed(2) + "}" : "";
-            let piExponentText = (0.1 + piExponent.level * 0.1).toString()
+            let piExponentText = (0.1 + piExponent.level * 0.1).toFixed(1)
             let result = "\\begin{matrix}";
             if (!laplaceActive) {
                 result += "\\dot{\\rho} = c_{1} "  + c1ExponentText + " c_{2} " + (laplaceTransformUnlock.level > 0? "\\lambda" + lambdaExponentText : "")  + " q_t";
@@ -1429,7 +1404,7 @@ var updateAvailability = () => {
     systems[3].resetT.isAvailable = activeSystemId == 3;
     systems[3].resetC1SandC2S.isAvailable = activeSystemId == 3;
     systems[4].resetT.isAvailable = activeSystemId == 4;
-    challengeUnlock.isAvailable = c1Exponent.level >= 3 && piExponent.level >= 3;
+    challengeUnlock.isAvailable = c1Exponent.level >= 3 && piExponent.level >= 4 && lambdaBase.level >= 2;
 }
 
 /**
@@ -1568,47 +1543,87 @@ var setInternalState = (state) => {
         if('completedChallenges' in values) isChallengeCleared = values.completedChallenges;
         if('laplaceActive' in values) { laplaceActive = values.laplaceActive; laplaceButton.text = !laplaceActive ? "Apply Laplace Transform" : "Invert Laplace Transform"; }
         if('timer') timer = parseFloat(values.timer);
-        if('tDomainTime' in values) { tDomainTime = parseInt(values.tDomainTime); tDomainSlider.value = tDomainTime; }
-        if('sDomainTime' in values) { sDomainTime = parseInt(values.sDomainTime); sDomainSlider.value = sDomainTime; }
-        if('automationEnabled' in values) { automationEnabled = values.automationEnabled == true; autoLaplaceToggle.isToggled = automationEnabled; }
+        if('tDomainTime' in values) {
+            tDomainTime = parseInt(values.tDomainTime);
+            tDomainSlider.value = tDomainTime;
+        }
+        if('sDomainTime' in values) {
+            sDomainTime = parseInt(values.sDomainTime);
+            sDomainSlider.value = sDomainTime;
+        }
+        if('automationEnabled' in values) {
+            automationEnabled = values.automationEnabled === true;
+            autoLaplaceToggle.isToggled = automationEnabled;
+        }
     }
 };
+
+// UI Sliders
+var tDomainSlider = ui.createSlider({
+    value: tDomainTime,
+    minimum: 1,
+    maximum: 60,
+    onValueChanged: () => {
+        tDomainTime = Math.round(tDomainSlider.value)
+    }
+}); 
+var sDomainSlider = ui.createSlider({
+    value: sDomainTime,
+    minimum: 1,
+    maximum: 60,
+    onValueChanged: () => {
+        sDomainTime = Math.round(sDomainSlider.value)
+    }
+});
+
+var autoLaplaceToggle = ui.createSwitch({
+    isToggled: automationEnabled,
+    onToggled: () => {
+        automationEnabled = autoLaplaceToggle.isToggled;
+        timer = 0;
+    }
+});
 
 // UI
 
 var laplaceButton = ui.createButton({
     text: !laplaceActive ? "Apply Laplace Transform" : "Invert Laplace Transform",
+    horizontalOptions: LayoutOptions.FILL_AND_EXPAND,
+    margin: new Thickness(5, 0, 5, 0),
     onClicked: () => {
-        laplaceActive = !laplaceActive
-        laplaceButton.text = !laplaceActive ? "Apply Laplace Transform" : "Invert Laplace Transform"
-        updateAvailability()
+        laplaceActive = !laplaceActive;
+        timer = 0;
+        laplaceButton.text = !laplaceActive ? "Apply Laplace Transform" : "Invert Laplace Transform";
+        updateAvailability();
     },
-    row: 1,
-    column: 0
-}
-);
+    //row: 1,
+    column: 0,
+});
 
 var challengeMenuButton = ui.createButton({
     text: "Assignments",
+    horizontalOptions: LayoutOptions.FILL_AND_EXPAND,
+    margin: new Thickness(5, 0, 5, 0),
     onClicked: () => {
         let challengeMenu = createChallengeMenu();
         challengeMenu.show();
     },
-    row: 1,
-    column: 1
-}
-);
+    //row: 1,
+    column: 1,
+});
 
 var handInButton = ui.createButton({
     text: "Hand-In",
+    horizontalOptions: LayoutOptions.FILL_AND_EXPAND,
+    margin: new Thickness(5, 0, 5, 0),
     onClicked: () => { 
         let menu = challengeCompletionMenu();
         menu.show();
     },
     isVisible: () => activeSystemId != 0,
-    row:1,
-    column:1
-})
+    //row: 1,
+    column: 1,
+});
 
 
 var startChallenge = (challengeId) => {
@@ -1637,7 +1652,7 @@ var laplaceAutomationMenu = ui.createPopup({
                     text: "Time in s domain"
                 }),
                 ui.createLatexLabel({
-                    text: () => Utils.getMath(sDomainTime + " \\text{ \mins}")
+                    text: () => Utils.getMath(sDomainTime + " \\text{ mins}")
                 }),
                 sDomainSlider,
                 ui.createLabel({
@@ -1797,7 +1812,7 @@ var getEquationOverlay = () => {
 var getCurrencyBarDelegate = () => {
     challengeMenuButton.isVisible = () => activeSystemId == 0 && challengeUnlock.level > 0;
     laplaceButton.isVisible = () => laplaceTransformUnlock.level > 0;
-    currencyBar = ui.createGrid({
+    /*currencyBar = ui.createGrid({
         columnDefinitions: ["20*", "30*", "auto"],
         children: [
             currencyBarTau = ui.createLatexLabel({
@@ -1829,6 +1844,51 @@ var getCurrencyBarDelegate = () => {
             challengeMenuButton,
             handInButton
         ],
+    });*/
+    currencyBar = ui.createGrid({
+        margin: new Thickness(0, 3, 0, 0),
+        rowDefinitions: ["auto", "auto", "auto"],
+        children: [
+            ui.createStackLayout({
+                row: 0,
+                horizontalOptions: LayoutOptions.FILL_AND_EXPAND,
+                orientation: StackOrientation.HORIZONTAL,
+                children: [
+                    currencyBarTau = ui.createLatexLabel({
+                        fontSize: 11,
+                        horizontalOptions: LayoutOptions.CENTER_AND_EXPAND,
+                        text: () => theory.tau + `$${theory.latexSymbol}$`,
+                    }),
+                    currencyBarCurrency = ui.createLatexLabel({
+                        fontSize: 11,
+                        horizontalOptions: LayoutOptions.CENTER_AND_EXPAND,
+                        text: () => currency.value.toString() + "$\\rho$",
+                    }),
+                    laplaceCurrencyBarCurrency = ui.createLatexLabel({
+                        fontSize: 11,
+                        horizontalOptions: LayoutOptions.CENTER_AND_EXPAND,
+                        text: () => laplaceCurrency.value.toString() + "$\\Lambda$",
+                        isVisible: () => laplaceTransformUnlock.level > 0
+                    }),
+                ]
+            }),
+            ui.createGrid({
+                row: 1,
+                columnDefinitions: ["*", "*"],
+                columnSpacing: 0,
+                horizontalOptions: LayoutOptions.FILL_AND_EXPAND,
+                children: [
+                    laplaceButton,
+                    challengeMenuButton,
+                    handInButton,
+                ],
+                isVisible: () => laplaceButton.isVisible || challengeMenuButton.isVisible || handInButton.isVisible,
+            }),
+            ui.createFrame({
+                row: 2,
+                heightRequest: 2,
+            })
+        ]
     });
     return currencyBar;
 }
