@@ -279,23 +279,19 @@ var init = () => {
             }
         }
 
-        unlock(){
-            if(systems[0].laplaceCurrency >= BigNumber.from(1e40)){
-                this.isUnlocked = true;
-            }
-            else{
-                let menu = ui.createPopup({
-                    title: "Unlock Condition",
-                    content: ui.createStackLayout({
-                        children: [
-                            ui.createLatexLabel({
-                                text: Utils.getMath("\\Lambda > 1e40")
-                            }),
-                        ]
-                    })
-                });
-                    menu.show();
-            }
+        unlockCondition() {
+            return systems[0].laplaceCurrency >= BigNumber.from(1e40);
+        }
+
+        unlockConditionLatex() {
+            return `\\Lambda > 1e40`;
+        }
+
+        rewardsList() {
+            return [
+                `Unlock Laplace Transform automation options.`,
+                `Additionally, each challenge completion increases $\\lambda$ base by 100.`,
+            ];
         }
 
         isCleared(){
@@ -330,20 +326,6 @@ var init = () => {
             if (this.currency > this.maxRho){
                 this.maxRho = this.currency
             }
-        }
-
-        viewReward(){
-            let menu = ui.createPopup({
-                title: "Reward",
-                content: ui.createStackLayout({
-                    children: [
-                        ui.createLatexLabel({
-                            text: Utils.getMath("\\text{Unlock Laplace Transform automation options. \\\\ Additionally, each challenge completion \\\\ increases \\lambda \\ base by 100.}")
-                        })
-                    ]
-                })
-            })
-            menu.show();
         }
 
         createTSliderMenu() {
@@ -558,23 +540,18 @@ var init = () => {
             }
         }
 
-        unlock(){
-            if(systems[0].t >= BigNumber.from(1e20)){
-                this.isUnlocked = true;
-            }
-            else{
-                let menu = ui.createPopup({
-                    title: "Unlock Condition",
-                    content: ui.createStackLayout({
-                        children: [
-                            ui.createLatexLabel({
-                                text: Utils.getMath("t > 1e20")
-                            }),
-                        ]
-                    })
-                });
-                    menu.show();
-            }
+        unlockCondition() {
+            return systems[0].t >= BigNumber.from(1e20);
+        }
+
+        unlockConditionLatex() {
+            return `t > 1e20`;
+        }
+
+        rewardsList() {
+            return [
+                `Add an exponent to $\\dot{t}$`
+            ];
         }
 
         isCleared(){
@@ -625,19 +602,6 @@ var init = () => {
                 result += ", \\ q_t = " + this.q.toString();
             }
             return result;
-        }
-        viewReward(){
-            let menu = ui.createPopup({
-                title: "Reward",
-                content: ui.createStackLayout({
-                    children: [
-                        ui.createLatexLabel({
-                            text: Utils.getMath("\\text{Add an exponent to }\\dot{t}")
-                        })
-                    ]
-                })
-            })
-            menu.show();
         }
 
         getInternalState() {
@@ -784,23 +748,18 @@ var init = () => {
             }
         }
 
-        unlock(){
-            if(systems[0].currency >= BigNumber.TEN.pow(1000)){
-                this.isUnlocked = true;
-            }
-            else{
-                let menu = ui.createPopup({
-                    title: "Unlock Condition",
-                    content: ui.createStackLayout({
-                        children: [
-                            ui.createLatexLabel({
-                                text: Utils.getMath("\\rho > 1e1000")
-                            }),
-                        ]
-                    })
-                });
-                    menu.show();
-            }
+        unlockCondition() {
+            return systems[0].currency >= BigNumber.TEN.pow(1000);
+        }
+
+        unlockConditionLatex() {
+            return `\\rho > 1e1000`;
+        }
+
+        rewardsList() {
+            return [
+                `Unlock the terms: $\\Omega$, $\\omega_t$, $\\omega_s$`
+            ];
         }
 
         isCleared(){
@@ -851,19 +810,6 @@ var init = () => {
                 result += ", \\ q_t = " + this.q.toString();
             }
             return result;
-        }
-        viewReward(){
-            let menu = ui.createPopup({
-                title: "Reward",
-                content: ui.createStackLayout({
-                    children: [
-                        ui.createLatexLabel({
-                            text: Utils.getMath("\\text{Unlock the terms: \\Omega, \\omega_t, \\omega_s}"),
-                        })
-                    ]
-                })
-            })
-            menu.show();
         }
 
         getInternalState() {
@@ -1015,23 +961,19 @@ var init = () => {
             }
         }
 
-        unlock(){
-            if(systems[0].currency >= BigNumber.TEN.pow(2100)){
-                this.isUnlocked = true;
-            }
-            else{
-                let menu = ui.createPopup({
-                    title: "Unlock Condition",
-                    content: ui.createStackLayout({
-                        children: [
-                            ui.createLatexLabel({
-                                text: Utils.getMath("\\rho > 1e2100")
-                            }),
-                        ]
-                    })
-                });
-                    menu.show();
-            }
+        unlockCondition() {
+            return systems[0].currency >= BigNumber.TEN.pow(2100);
+        }
+
+        unlockConditionLatex() {
+            return `\\rho > 1e2100`;
+        }
+
+        rewardsList() {
+            return [
+                `Increases $\\Omega$ exponent (t domain only).`,
+                `$\\Omega \\rightarrow \\Omega ^{1 + \\frac{\\log_{10}{(1+t)}}{375}}$`,
+            ];
         }
 
         isCleared(){
@@ -1081,23 +1023,6 @@ var init = () => {
                 result += ", \\ q_t = " + this.q.toString();
             }
             return result;
-        }
-        viewReward(){
-            let menu = ui.createPopup({
-                title: "Reward",
-                content: ui.createStackLayout({
-                    children: [
-                        ui.createLatexLabel({
-                            text: Utils.getMath("\\begin{matrix} \
-                            \\\\ \\text{Increases \\Omega \\ exponent (t domain only).} \
-                            \\\\ \\Omega \\rightarrow \\Omega ^{1 + \\frac{\\log_{10}{(1+t)}}{375}} \
-                            \\end{matrix}"),
-                            fontSize: 16
-                        })
-                    ]
-                })
-            })
-            menu.show();
         }
 
         getInternalState() {
@@ -1293,6 +1218,12 @@ var init = () => {
                 this.currency += bonus * this.getOmega().pow(1 + isChallengeCleared[3] * (1 + this.t).log10() / 450)
                 * this.getLambda(this.lambda.upgrade.level).pow(1 + this.lambdaExponent.upgrade.level * 0.05) * this.getC1(this.c1.upgrade.level).pow(1 + c1Exponent.level * 0.05) * this.getC2(this.c2.upgrade.level) * this.q * dt;
             }
+
+            systems.forEach(system => {
+                if (system.unlockCondition !== undefined && !system.isUnlocked) {
+                    system.isUnlocked = system.unlockCondition();
+                }
+            })
         }
 
         getInternalState() {
@@ -1661,7 +1592,79 @@ var laplaceAutomationMenu = ui.createPopup({
                 autoLaplaceToggle
             ]
         })
-    })
+    });
+
+var createChallengePlayPopup = (parent, i) => {
+    var challenge = systems[i];
+    var isCompleted = challenge.maxRho >= challenge.goal;
+
+    let menu;
+    let grid = ui.createGrid({
+        children: [
+            ui.createButton({
+                column: 0,
+                text: "Yes",
+                onClicked: () => {
+                    if (theory.canPublish) {
+                        theory.publish();
+                    }
+                    startChallenge(i);
+
+                    parent.hide();
+                    menu.hide();
+                },
+            }),
+            ui.createButton({
+                column: 1,
+                text: "No",
+                onClicked: () => {
+                    menu.hide();
+                },
+            }),
+        ]
+    });
+
+    let children = [];
+    children.push(ui.createLatexLabel({
+        text: `Starting an assignment will force-publish if possible or reset current publication.`,
+        horizontalTextAlignment: TextAlignment.CENTER,
+        margin: new Thickness(0, 0, 0, isCompleted ? 10 : 20),
+    }));
+    if (isCompleted) {
+        let rewardsList = [];
+        challenge.rewardsList().forEach(reward => {
+            rewardsList.push(ui.createLatexLabel({
+                text: reward,
+                fontSize: 11,
+            }));
+        });
+        children.push(ui.createLatexLabel({
+            text: `Current rewards:`,
+            horizontalTextAlignment: TextAlignment.CENTER,
+        }));
+        children.push(ui.createStackLayout({
+            children: rewardsList,
+            margin: new Thickness(0, 0, 0, 20),
+        }));
+    }
+    children.push(ui.createLatexLabel({
+        text: `Do you want to continue?`,
+        horizontalTextAlignment: TextAlignment.CENTER,
+        margin: new Thickness(0, 0, 0, 10),
+    }));
+    
+    menu = ui.createPopup({
+        title: `${challenge.name}`,
+        content: ui.createStackLayout({
+            children: [
+                ...children,
+                grid,
+            ]
+        })
+    });
+    return menu;
+};
+
 var createChallengeMenu = () => {
     let menu = ui.createPopup({
         title: "Assignments",
@@ -1669,41 +1672,90 @@ var createChallengeMenu = () => {
 
     challengeGrid = []
     for (let i = 1; i < systems.length; i++){
-        if (systems[i].isUnlocked){
-            challengeGrid.push(
-                ui.createGrid({
-                    columnDefinitions: ["auto", "15*", "auto"],
-                    rowDefinitions: ["auto", "auto", "auto"],
-                    columnSpacing: 10,
-                    rowSpacing: 5,
-                    backgroundColor: i % 2 == 1? Color.DARK_BACKGROUND : Color.LIGHT_BACKGROUND,
-                    children: [
-                        ui.createLatexLabel({text: Utils.getMath("\\begin{matrix} \\text{Assignment "+ i + "} \\\\ \\text{" + systems[i].name + "} \\\\ \\text{max } \\rho = " + systems[i].maxRho.toString() + "\\end{matrix}"), verticalTextAlignment: TextAlignment.CENTER, horizontalOptions: LayoutOptions.CENTER, verticalOptions: LayoutOptions.CENTER, row: i-1, column: 0}),
-                        ui.createButton({text: "Start", onClicked: () => { startChallenge(i); menu.hide();}, horizontalOptions: LayoutOptions.CENTER, verticalOptions: LayoutOptions.CENTER, row: i - 1, column: 1 }),
-                        ui.createButton({text: "Reward", onClicked: () => { systems[i].viewReward()}, horizontalOptions: LayoutOptions.CENTER, verticalOptions: LayoutOptions.CENTER, row: i - 1, column: 2}), 
-                    ]
-                })
-            )
+        let title = ui.createLatexLabel({
+            row: 0,
+            text: `${systems[i].name}`,
+            fontSize: 12,
+            horizontalOptions: LayoutOptions.CENTER_AND_EXPAND,
+            verticalOptions: LayoutOptions.END,
+        });
+
+        let progressText = `\\max{\\rho} = `;
+        if (systems[i].maxRho >= systems[i].goal) {
+            progressText += `${systems[i].goal} \\quad (${systems[i].maxRho})`;
+        } else {
+            progressText += `${systems[i].maxRho}`;
         }
-        else{
-            challengeGrid.push(
-                ui.createGrid({
-                    columnDefinitions: ["20*", "15*", "auto"],
-                    rowDefinitions: ["auto", "auto", "auto"],
-                    columnSpacing: 10,
-                    rowSpacing: 5,
-                    backgroundColor: i % 2 == 1? Color.DARK_BACKGROUND : Color.LIGHT_BACKGROUND,
-                    children: [
-                        ui.createLatexLabel({text: Utils.getMath("\\text{Assignment "+ i + " locked}"), horizontalOptions: LayoutOptions.CENTER, verticalOptions: LayoutOptions.CENTER, row: i - 1, column: 0}),
-                        ui.createButton({text: "Unlock", onClicked: () => { menu.hide(); systems[i].unlock(); }, horizontalOptions: LayoutOptions.CENTER, verticalOptions: LayoutOptions.CENTER, row: i - 1, column: 1 })
-                    ]
-                })
-            )
+
+        if (!systems[i].isUnlocked) {
+            progressText = `\\text{Locked}`;
+            if (i > 1 && systems[i - 1].isUnlocked) {
+                progressText += `\\text{: } ${systems[i].unlockConditionLatex()}`;
+            }
         }
+
+        if (i > 1 && !systems[i - 1].isUnlocked) {
+            title.text = `???`;
+        }
+
+        let progress = ui.createLatexLabel({
+            row: 1,
+            text: Utils.getMath(progressText),
+            textColor: Color.TEXT_MEDIUM,
+            fontSize: 10,
+            horizontalOptions: LayoutOptions.CENTER_AND_EXPAND,
+            verticalOptions: LayoutOptions.END,
+        });
+
+        let grid = ui.createGrid({
+            rowDefinitions: ["*", "*"],
+            rowSpacing: 0,
+            children: [
+                ui.createFrame({
+                    row: 0,
+                    borderColor: Color.TRANSPARENT,
+                    backgroundColor: Color.TRANSPARENT,
+                    content: title,
+                }),
+                ui.createFrame({
+                    row: 1,
+                    borderColor: Color.TRANSPARENT,
+                    backgroundColor: Color.TRANSPARENT,
+                    content: progress,
+                    margin: new Thickness(0, 0, 0, 5),
+                }),
+            ]
+        });
+
+        challengeGrid.push(ui.createFrame({
+            heightRequest: 40,
+            padding: new Thickness(0, 3, 0, 3),
+            content: grid,
+            onTouched: (e) => {
+                if (e.type.isReleased() && systems[i].isUnlocked) {
+                    createChallengePlayPopup(menu, i).show();
+                }
+            },
+        }));
     }
 
     menu.content = ui.createStackLayout({
-        children: challengeGrid
+        children: [
+            ui.createBox({
+                heightRequest: 2,
+            }),
+            ui.createFrame({
+                padding: new Thickness(10),
+                content: ui.createScrollView({
+                    content: ui.createStackLayout({
+                        spacing: 5,
+                        children: [
+                            ...challengeGrid
+                        ],
+                    }),
+                }),
+            }),
+        ]
     })
 
     return menu;
@@ -1812,39 +1864,6 @@ var getEquationOverlay = () => {
 var getCurrencyBarDelegate = () => {
     challengeMenuButton.isVisible = () => activeSystemId == 0 && challengeUnlock.level > 0;
     laplaceButton.isVisible = () => laplaceTransformUnlock.level > 0;
-    /*currencyBar = ui.createGrid({
-        columnDefinitions: ["20*", "30*", "auto"],
-        children: [
-            currencyBarTau = ui.createLatexLabel({
-                text: () => Utils.getMath(theory.tau + theory.latexSymbol),
-                row: 0,
-                column: 0,
-                horizontalTextAlignment: TextAlignment.CENTER,
-                horizontalOptions: LayoutOptions.CENTER,
-                verticalOptions: LayoutOptions.CENTER,
-            }),
-            currencyBarCurrency = ui.createLatexLabel({
-                text: () => Utils.getMath(currency.value.toString() + "\\rho"),
-                row: 0,
-                column: 1,
-                horizontalTextAlignment: TextAlignment.CENTER,
-                horizontalOptions: LayoutOptions.CENTER,
-                verticalOptions: LayoutOptions.CENTER,
-            }),
-            laplaceCurrencyBarCurrency = ui.createLatexLabel({
-                text: () => Utils.getMath(laplaceCurrency.value.toString() + "\\Lambda"),
-                row: 0,
-                column: 2,
-                horizontalTextAlignment: TextAlignment.CENTER,
-                horizontalOptions: LayoutOptions.CENTER,
-                verticalOptions: LayoutOptions.CENTER,
-                isVisible: () => laplaceTransformUnlock.level > 0
-            }),
-            laplaceButton,
-            challengeMenuButton,
-            handInButton
-        ],
-    });*/
     currencyBar = ui.createGrid({
         margin: new Thickness(0, 3, 0, 0),
         rowDefinitions: ["auto", "auto", "auto"],
