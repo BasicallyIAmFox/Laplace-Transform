@@ -1519,12 +1519,31 @@ var autoLaplaceToggle = ui.createSwitch({
 
 // UI
 
+var getImageSize = (width) => {
+    if(width >= 1080)
+      return 72;
+    if(width >= 720)
+      return 54;
+    if(width >= 360)
+      return 36;
+    return 30;
+}
+
+var getImageSize2 = (width) => {
+    if(width >= 1080)
+      return 48;
+    if(width >= 720)
+      return 36;
+    if(width >= 360)
+      return 24;
+    return 20;
+}
+
 var laplaceButton = ui.createSwitch({
     row: 0, column: 0,
     isToggled: laplaceActive,
-    margin: new Thickness(2),
-    padding: new Thickness(2),
-    onClicked: () => {
+    scale: 1 / 1.2,
+    onToggled: () => {
         changeLaplace(laplaceButton.isToggled);
         updateAvailability();
     },
@@ -1537,16 +1556,16 @@ ImageSource.fromUri('https://raw.githubusercontent.com/conicgames/custom-theorie
 var challengeButton = ui.createFrame({
     row: 0, column: 1,
     cornerRadius: 1,
-    margin: new Thickness(2),
+    margin: new Thickness(4),
     padding: new Thickness(2),
-    heightRequest: getImageSize2(ui.screenWidth),
-    widthRequest: getImageSize2(ui.screenWidth),
+    heightRequest: getImageSize(ui.screenWidth) / 1.2,
+    widthRequest: getImageSize(ui.screenWidth) / 1.2,
     content: ui.createImage({
         source: challengeImg,
         aspect: Aspect.ASPECT_FIT,
         useTint: false
     }),
-    isVisible: () => challengeUnlock.level > 0,
+    isVisible: () => challengeUnlock !== undefined && challengeUnlock.level > 0,
     onTouched: (e) => {
         if (!e.type.isReleased()) return;
 
@@ -1803,26 +1822,6 @@ var challengeCompletionMenu = () => {
         ]
     })
     return menu;
-}
-
-var getImageSize = (width) => {
-    if(width >= 1080)
-      return 72;
-    if(width >= 720)
-      return 54;
-    if(width >= 360)
-      return 36;
-    return 30;
-}
-
-var getImageSize2 = (width) => {
-    if(width >= 1080)
-      return 48;
-    if(width >= 720)
-      return 36;
-    if(width >= 360)
-      return 24;
-    return 20;
 }
 
 var alwaysShowRefundButtons = ()  => {
