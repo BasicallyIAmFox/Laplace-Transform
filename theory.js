@@ -1894,6 +1894,7 @@ var getEquationOverlay = () => {
             ui.createGrid({
                 columnDefinitions: ["*", "*"],
                 columnSpacing: 0,
+                verticalOptions: LayoutOptions.END,
                 children: [
                     laplaceButton,
                     challengeButton,
