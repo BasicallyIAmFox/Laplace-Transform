@@ -1519,40 +1519,45 @@ var autoLaplaceToggle = ui.createSwitch({
 
 // UI
 
-var laplaceButton = ui.createButton({
-    text: !laplaceActive ? "Apply Laplace Transform" : "Invert Laplace Transform",
-    horizontalOptions: LayoutOptions.FILL_AND_EXPAND,
-    margin: new Thickness(5, 0, 5, 0),
+var laplaceButton = ui.createSwitch({
+    row: 0, column: 0,
+    isToggled: laplaceActive,
+    margin: new Thickness(2),
+    padding: new Thickness(2),
     onClicked: () => {
-        changeLaplace(!laplaceActive);
+        changeLaplace(laplaceButton.isToggled);
         updateAvailability();
     },
-    column: 0,
+    horizontalOptions: LayoutOptions.START,
 });
 
-var challengeMenuButton = ui.createButton({
-    text: "Assignments",
-    horizontalOptions: LayoutOptions.FILL_AND_EXPAND,
-    margin: new Thickness(5, 0, 5, 0),
-    onClicked: () => {
-        let challengeMenu = createChallengeMenu();
-        challengeMenu.show();
+const challengeImg = game.settings.theme == Theme.LIGHT ?
+ImageSource.fromUri('https://raw.githubusercontent.com/conicgames/custom-theories/main/assets/RiemannZetaFunctionBlackHoleDark.png') :
+ImageSource.fromUri('https://raw.githubusercontent.com/conicgames/custom-theories/main/assets/RiemannZetaFunctionBlackHoleLight.png');
+var challengeButton = ui.createFrame({
+    row: 0, column: 1,
+    cornerRadius: 1,
+    margin: new Thickness(2),
+    padding: new Thickness(2),
+    heightRequest: getImageSize2(ui.screenWidth),
+    widthRequest: getImageSize2(ui.screenWidth),
+    content: ui.createImage({
+        source: challengeImg,
+        aspect: Aspect.ASPECT_FIT,
+        useTint: false
+    }),
+    isVisible: () => challengeUnlock.level > 0,
+    onTouched: (e) => {
+        if (!e.type.isReleased()) return;
+
+        if (activeSystemId === 0) {
+            createChallengeMenu().show();
+        } else {
+            challengeCompletionMenu().show();
+        }
     },
-    column: 1,
+    horizontalOptions: LayoutOptions.END,
 });
-
-var handInButton = ui.createButton({
-    text: "Hand-In",
-    horizontalOptions: LayoutOptions.FILL_AND_EXPAND,
-    margin: new Thickness(5, 0, 5, 0),
-    onClicked: () => { 
-        let menu = challengeCompletionMenu();
-        menu.show();
-    },
-    isVisible: () => activeSystemId != 0,
-    column: 1,
-});
-
 
 var startChallenge = (challengeId) => {
     currency.value = BigNumber.ZERO;
@@ -1810,6 +1815,16 @@ var getImageSize = (width) => {
     return 30;
 }
 
+var getImageSize2 = (width) => {
+    if(width >= 1080)
+      return 48;
+    if(width >= 720)
+      return 36;
+    if(width >= 360)
+      return 24;
+    return 20;
+}
+
 var alwaysShowRefundButtons = ()  => {
     return false;
 }
@@ -1818,7 +1833,6 @@ var changeLaplace = (value, force = false) => {
     if (!force && laplaceActive === value) return;
 
     laplaceActive = value;
-    laplaceButton.text = !value ? "Apply Laplace Transform" : "Invert Laplace Transform";
     timer = 0;
 }
 
@@ -1830,102 +1844,63 @@ var resetStage = () => {
 
 var getEquationOverlay = () => {
     return ui.createGrid({
-      columnDefinitions: ["1*", "3*", "1*"],
-      columnSpacing: 0,
-      children: [
-        ui.createFrame({
-            row: 0,
-            column: 0,
-            margin: new Thickness(3),
-            padding: new Thickness(3),
-            widthRequest: getImageSize(ui.screenWidth) / 1.2,
-            heightRequest: getImageSize(ui.screenWidth) / 1.2,
-            horizontalOptions: LayoutOptions.START,
-            verticalOptions: LayoutOptions.START,
-            backgroundColor: Color.TRANSPARENT,
-            borderColor: Color.TRANSPARENT,
-            content: ui.createImage({
-                source: ImageSource.SETTINGS,
-                aspect: Aspect.ASPECT_FIT,
-                useTint: true,
-            }),
-            onTouched: (e) => {
-                if (e.type.isReleased()) {
-                    if (activeSystemId == 1){
-                        systems[1].menu.show();
-                    }
-                    else {
-                        laplaceAutomationMenu.show();
-                    }
-                }
-            },
-            isVisible: () => activeSystemId == 0 && isChallengeCleared[0] == 1 || activeSystemId == 1,
-        }),
-        ui.createFrame({
-            isVisible: () => activeSystemId != 0,
-            row: 0,
-            column: 1,
-            horizontalOptions: LayoutOptions.FILL_AND_EXPAND,
-            verticalOptions: LayoutOptions.START,
-            children: [
-              ui.createProgressBar({
-                progress: () => activeSystemId != 0 ? Math.min((systems[activeSystemId].maxRho.log10() / systems[activeSystemId].goal.log10()).toNumber(), 1) : 0
-            }),
-            ],
-          }),
-        ]
-      })
-}
-
-var getCurrencyBarDelegate = () => {
-    challengeMenuButton.isVisible = () => activeSystemId == 0 && challengeUnlock.level > 0;
-    laplaceButton.isVisible = () => laplaceTransformUnlock.level > 0;
-    currencyBar = ui.createGrid({
-        margin: new Thickness(0, 3, 0, 0),
-        rowDefinitions: ["auto", "auto", "auto"],
         children: [
-            ui.createStackLayout({
-                row: 0,
-                horizontalOptions: LayoutOptions.FILL_AND_EXPAND,
-                orientation: StackOrientation.HORIZONTAL,
+            ui.createGrid({
+                columnDefinitions: ["1*", "3*", "1*"],
+                columnSpacing: 0,
                 children: [
-                    currencyBarTau = ui.createLatexLabel({
-                        fontSize: 11,
-                        horizontalOptions: LayoutOptions.CENTER_AND_EXPAND,
-                        text: () => theory.tau + `$${theory.latexSymbol}$`,
+                    ui.createFrame({
+                        row: 0,
+                        column: 0,
+                        margin: new Thickness(3),
+                        padding: new Thickness(3),
+                        widthRequest: getImageSize(ui.screenWidth) / 1.2,
+                        heightRequest: getImageSize(ui.screenWidth) / 1.2,
+                        horizontalOptions: LayoutOptions.START,
+                        verticalOptions: LayoutOptions.START,
+                        backgroundColor: Color.TRANSPARENT,
+                        borderColor: Color.TRANSPARENT,
+                        content: ui.createImage({
+                            source: ImageSource.SETTINGS,
+                            aspect: Aspect.ASPECT_FIT,
+                            useTint: true,
+                        }),
+                        onTouched: (e) => {
+                            if (e.type.isReleased()) {
+                                if (activeSystemId == 1){
+                                    systems[1].menu.show();
+                                }
+                                else {
+                                    laplaceAutomationMenu.show();
+                                }
+                            }
+                        },
+                        isVisible: () => activeSystemId == 0 && isChallengeCleared[0] == 1 || activeSystemId == 1,
                     }),
-                    currencyBarCurrency = ui.createLatexLabel({
-                        fontSize: 11,
-                        horizontalOptions: LayoutOptions.CENTER_AND_EXPAND,
-                        text: () => currency.value.toString() + "$\\rho$",
-                    }),
-                    laplaceCurrencyBarCurrency = ui.createLatexLabel({
-                        fontSize: 11,
-                        horizontalOptions: LayoutOptions.CENTER_AND_EXPAND,
-                        text: () => laplaceCurrency.value.toString() + "$\\Lambda$",
-                        isVisible: () => laplaceTransformUnlock.level > 0
+                    ui.createFrame({
+                        isVisible: () => activeSystemId != 0,
+                        row: 0,
+                        column: 1,
+                        horizontalOptions: LayoutOptions.FILL_AND_EXPAND,
+                        verticalOptions: LayoutOptions.START,
+                        children: [
+                            ui.createProgressBar({
+                                progress: () => activeSystemId != 0 ? Math.min((systems[activeSystemId].maxRho.log10() / systems[activeSystemId].goal.log10()).toNumber(), 1) : 0
+                            }),
+                        ],
                     }),
                 ]
             }),
             ui.createGrid({
-                row: 1,
                 columnDefinitions: ["*", "*"],
                 columnSpacing: 0,
-                horizontalOptions: LayoutOptions.FILL_AND_EXPAND,
                 children: [
                     laplaceButton,
-                    challengeMenuButton,
-                    handInButton,
-                ],
-                isVisible: () => laplaceButton.isVisible || challengeMenuButton.isVisible || handInButton.isVisible,
+                    challengeButton,
+                ]
             }),
-            ui.createFrame({
-                row: 2,
-                heightRequest: 2,
-            })
         ]
-    });
-    return currencyBar;
+    })
 }
 
 init();
