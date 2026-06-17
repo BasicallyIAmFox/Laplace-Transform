@@ -1551,8 +1551,8 @@ var laplaceButton = ui.createSwitch({
 });
 
 const challengeImg = game.settings.theme == Theme.LIGHT ?
-ImageSource.fromUri('https://raw.githubusercontent.com/conicgames/custom-theories/main/assets/RiemannZetaFunctionBlackHoleDark.png') :
-ImageSource.fromUri('https://raw.githubusercontent.com/conicgames/custom-theories/main/assets/RiemannZetaFunctionBlackHoleLight.png');
+ImageSource.fromUri('https://raw.githubusercontent.com/BasicallyIAmFox/Laplace-Transform/fixes-iostemp/assets/AssignmentsDark.png') :
+ImageSource.fromUri('https://raw.githubusercontent.com/BasicallyIAmFox/Laplace-Transform/fixes-iostemp/assets/AssignmentsLight.png');
 var challengeButton = ui.createFrame({
     row: 0, column: 1,
     cornerRadius: 1,
@@ -1565,15 +1565,33 @@ var challengeButton = ui.createFrame({
         aspect: Aspect.ASPECT_FIT,
         useTint: false
     }),
-    isVisible: () => challengeUnlock !== undefined && challengeUnlock.level > 0,
+    isVisible: () => activeSystemId === 0 && challengeUnlock !== undefined && challengeUnlock.level > 0,
     onTouched: (e) => {
         if (!e.type.isReleased()) return;
+        createChallengeMenu().show();
+    },
+    horizontalOptions: LayoutOptions.END,
+});
 
-        if (activeSystemId === 0) {
-            createChallengeMenu().show();
-        } else {
-            challengeCompletionMenu().show();
-        }
+const handInImg = game.settings.theme == Theme.LIGHT ?
+ImageSource.fromUri('https://raw.githubusercontent.com/BasicallyIAmFox/Laplace-Transform/fixes-iostemp/assets/HandInDark.png') :
+ImageSource.fromUri('https://raw.githubusercontent.com/BasicallyIAmFox/Laplace-Transform/fixes-iostemp/assets/HandInLight.png');
+var handInButton = ui.createFrame({
+    row: 0, column: 1,
+    cornerRadius: 1,
+    margin: new Thickness(4),
+    padding: new Thickness(2),
+    heightRequest: getImageSize(ui.screenWidth) / 1.2,
+    widthRequest: getImageSize(ui.screenWidth) / 1.2,
+    content: ui.createImage({
+        source: handInImg,
+        aspect: Aspect.ASPECT_FIT,
+        useTint: false
+    }),
+    isVisible: () => activeSystemId !== 0,
+    onTouched: (e) => {
+        if (!e.type.isReleased()) return;
+        challengeCompletionMenu().show();
     },
     horizontalOptions: LayoutOptions.END,
 });
@@ -1897,6 +1915,7 @@ var getEquationOverlay = () => {
                 children: [
                     laplaceButton,
                     challengeButton,
+                    handInButton,
                 ]
             }),
         ]
