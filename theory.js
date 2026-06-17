@@ -1766,7 +1766,7 @@ var createChallengeMenu = () => {
                     borderColor: Color.TRANSPARENT,
                     backgroundColor: Color.TRANSPARENT,
                     content: progress,
-                    margin: new Thickness(0, 0, 0, 5),
+                    margin: new Thickness(0, 0, 0, 2),
                 }),
             ]
         });
