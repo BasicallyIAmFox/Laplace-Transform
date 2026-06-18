@@ -23,6 +23,15 @@ var sDomainTime = 1;
 var automationEnabled = false;
 var isChallengeCleared = [0, 0, 0, 0, 0, 0, 0]
 
+const parseBigNumBSF = (str) => {
+    try {
+        return BigNumber.fromBase64String(str);
+    }
+    catch {
+        return parseBigNumber(str);
+    }
+};
+
 var init = () => {
     currency = theory.createCurrency();
     laplaceCurrency = theory.createCurrency("Λ", "\\Lambda");
@@ -398,26 +407,26 @@ var init = () => {
         getInternalState() {
             return JSON.stringify({
                 t: `${this.t}`,
-                R: `${this.R}`,
-                I: `${this.I}`,
+                R: `${this.R.toBase64String()}`,
+                I: `${this.I.toBase64String()}`,
                 isPaused: `${this.isPaused}`,
                 isUnlocked: `${this.isUnlocked}`,
-                currency: `${this.currency}`,
-                laplaceCurrency: `${this.laplaceCurrency}`,
-                maxRho: `${this.maxRho}`
+                currency: `${this.currency.toBase64String()}`,
+                laplaceCurrency: `${this.laplaceCurrency.toBase64String()}`,
+                maxRho: `${this.maxRho.toBase64String()}`
             })
         }
 
         setInternalState(state) {
             let values = JSON.parse(state);
             if(values.t) { this.t = parseFloat(values.t); this.tSlider.value = this.t; }
-            if(values.R) this.R = parseBigNumber(values.R);
-            if(values.I) this.I = parseBigNumber(values.I);
+            if(values.R) this.R = parseBigNumBSF(values.R);
+            if(values.I) this.I = parseBigNumBSF(values.I);
             if(values.isPaused) { this.isPaused = values.isPaused == "true"; this.pauseSwitch.isToggled = values.isPaused == "true"; }
             if(values.isUnlocked) { this.isUnlocked = values.isUnlocked == "true"; }
-            if(values.currency) this.currency = parseBigNumber(values.currency);
-            if(values.laplaceCurrency) this.laplaceCurrency = parseBigNumber(values.laplaceCurrency);
-            if(values.maxRho) this.maxRho = parseBigNumber(values.maxRho);
+            if(values.currency) this.currency = parseBigNumBSF(values.currency);
+            if(values.laplaceCurrency) this.laplaceCurrency = parseBigNumBSF(values.laplaceCurrency);
+            if(values.maxRho) this.maxRho = parseBigNumBSF(values.maxRho);
         }
 
         processPublish(){
@@ -608,23 +617,23 @@ var init = () => {
 
         getInternalState() {
             return JSON.stringify({
-                t: `${this.t}`,
-                q: `${this.q}`,
+                t: `${this.t.toBase64String()}`,
+                q: `${this.q.toBase64String()}`,
                 isUnlocked: `${this.isUnlocked}`,
-                currency: `${this.currency}`,
-                laplaceCurrency: `${this.laplaceCurrency}`,
-                maxRho: `${this.maxRho}`
+                currency: `${this.currency.toBase64String()}`,
+                laplaceCurrency: `${this.laplaceCurrency.toBase64String()}`,
+                maxRho: `${this.maxRho.toBase64String()}`
             })
         }
 
         setInternalState(state) {
             let values = JSON.parse(state);
-            if(values.t) { this.t = parseBigNumber(values.t); }
-            if(values.q) { this.q = parseBigNumber(values.q); }
+            if(values.t) { this.t = parseBigNumBSF(values.t); }
+            if(values.q) { this.q = parseBigNumBSF(values.q); }
             if(values.isUnlocked) { this.isUnlocked = values.isUnlocked == "true"; }
-            if(values.currency) this.currency = parseBigNumber(values.currency);
-            if(values.laplaceCurrency) this.laplaceCurrency = parseBigNumber(values.laplaceCurrency);
-            if(values.maxRho) this.maxRho = parseBigNumber(values.maxRho);
+            if(values.currency) this.currency = parseBigNumBSF(values.currency);
+            if(values.laplaceCurrency) this.laplaceCurrency = parseBigNumBSF(values.laplaceCurrency);
+            if(values.maxRho) this.maxRho = parseBigNumBSF(values.maxRho);
         }
 
         processPublish(){
@@ -817,22 +826,22 @@ var init = () => {
         getInternalState() {
             return JSON.stringify({
                 t: `${this.t}`,
-                q: `${this.q}`,
+                q: `${this.q.toBase64String()}`,
                 isUnlocked: `${this.isUnlocked}`,
-                currency: `${this.currency}`,
-                laplaceCurrency: `${this.laplaceCurrency}`,
-                maxRho: `${this.maxRho}`
+                currency: `${this.currency.toBase64String()}`,
+                laplaceCurrency: `${this.laplaceCurrency.toBase64String()}`,
+                maxRho: `${this.maxRho.toBase64String()}`
             })
         }
 
         setInternalState(state) {
             let values = JSON.parse(state);
             if(values.t) { this.t = parseFloat(values.t); }
-            if(values.q) { this.q = parseBigNumber(values.q); }
+            if(values.q) { this.q = parseBigNumBSF(values.q); }
             if(values.isUnlocked) { this.isUnlocked = values.isUnlocked == "true"; }
-            if(values.currency) this.currency = parseBigNumber(values.currency);
-            if(values.laplaceCurrency) this.laplaceCurrency = parseBigNumber(values.laplaceCurrency);
-            if(values.maxRho) this.maxRho = parseBigNumber(values.maxRho);
+            if(values.currency) this.currency = parseBigNumBSF(values.currency);
+            if(values.laplaceCurrency) this.laplaceCurrency = parseBigNumBSF(values.laplaceCurrency);
+            if(values.maxRho) this.maxRho = parseBigNumBSF(values.maxRho);
         }
 
         processPublish(){
@@ -1030,22 +1039,22 @@ var init = () => {
         getInternalState() {
             return JSON.stringify({
                 t: `${this.t}`,
-                q: `${this.q}`,
+                q: `${this.q.toBase64String()}`,
                 isUnlocked: `${this.isUnlocked}`,
-                currency: `${this.currency}`,
-                laplaceCurrency: `${this.laplaceCurrency}`,
-                maxRho: `${this.maxRho}`
+                currency: `${this.currency.toBase64String()}`,
+                laplaceCurrency: `${this.laplaceCurrency.toBase64String()}`,
+                maxRho: `${this.maxRho.toBase64String()}`
             })
         }
 
         setInternalState(state) {
             let values = JSON.parse(state);
             if(values.t) { this.t = parseFloat(values.t); }
-            if(values.q) { this.q = parseBigNumber(values.q); }
+            if(values.q) { this.q = parseBigNumBSF(values.q); }
             if(values.isUnlocked) { this.isUnlocked = values.isUnlocked == "true"; }
-            if(values.currency) this.currency = parseBigNumber(values.currency);
-            if(values.laplaceCurrency) this.laplaceCurrency = parseBigNumber(values.laplaceCurrency);
-            if(values.maxRho) this.maxRho = parseBigNumber(values.maxRho);
+            if(values.currency) this.currency = parseBigNumBSF(values.currency);
+            if(values.laplaceCurrency) this.laplaceCurrency = parseBigNumBSF(values.laplaceCurrency);
+            if(values.maxRho) this.maxRho = parseBigNumBSF(values.maxRho);
         }
 
         processPublish(){
@@ -1230,21 +1239,21 @@ var init = () => {
 
         getInternalState() {
             return JSON.stringify({
-                s: `${this.s}`,
-                t: `${this.t}`,
-                q: `${this.q}`,
-                currency: `${this.currency}`,
-                laplaceCurrency: `${this.laplaceCurrency}`
+                s: `${this.s.toBase64String()}`,
+                t: `${this.t.toBase64String()}`,
+                q: `${this.q.toBase64String()}`,
+                currency: `${this.currency.toBase64String()}`,
+                laplaceCurrency: `${this.laplaceCurrency.toBase64String()}`
             })
         }
 
         setInternalState(state) {
             let values = JSON.parse(state);
-            if(values.s) this.s = parseBigNumber(values.s);
-            if(values.t) this.t = parseBigNumber(values.t);
-            if(values.q) this.q = parseBigNumber(values.q)
-            if(values.currency) this.currency = parseBigNumber(values.currency);
-            if(values.laplaceCurrency) this.laplaceCurrency = parseBigNumber(values.laplaceCurrency);
+            if(values.s) this.s = parseBigNumBSF(values.s);
+            if(values.t) this.t = parseBigNumBSF(values.t);
+            if(values.q) this.q = parseBigNumBSF(values.q)
+            if(values.currency) this.currency = parseBigNumBSF(values.currency);
+            if(values.laplaceCurrency) this.laplaceCurrency = parseBigNumBSF(values.laplaceCurrency);
         }
 
         primaryEquation() {
