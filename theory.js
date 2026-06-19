@@ -1432,7 +1432,7 @@ var getCurrencyFromTau = (tau) => [tau.max(BigNumber.ONE).pow(1 / tauExponent), 
  * A good place to reset your internal state.
  */
 var postPublish = () => {
-    laplaceActive = false;
+    changeLaplace(false, true);
     systems[activeSystemId].processPublish()
     theory.invalidateSecondaryEquation();
 };
