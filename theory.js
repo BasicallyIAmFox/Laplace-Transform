@@ -491,7 +491,7 @@ var init = () => {
                 internalId: 1,
                 description: (_) => Utils.getMath("c_1 =" + this.getC1(this.c1.upgrade.level)),
                 info: (amount) => Utils.getMathTo("c_1 =" + this.getC1(this.c1.upgrade.level), "c_1=" + this.getC1(this.c1.upgrade.level + amount)),
-                costModel: new ExponentialCost(1e1, Math.log2(1.8)),
+                costModel: new FirstFreeCost(new ExponentialCost(1e1, Math.log2(1.8))),
                 laplaceUpgrade: false,
             }
 
@@ -514,7 +514,7 @@ var init = () => {
                 internalId: 4,
                 description: (_) => Utils.getMath("c_{1s} =" + this.getC1S(this.c1s.upgrade.level)),
                 info: (amount) => Utils.getMathTo("c_{1s} =" + this.getC1S(this.c1s.upgrade.level), "c_{1s}=" + this.getC1S(this.c1s.upgrade.level + amount)),
-                costModel: new ExponentialCost(50, Math.log2(1.8)),
+                costModel: new FirstFreeCost(new ExponentialCost(50, Math.log2(1.8))),
                 laplaceUpgrade: true
             }
 
@@ -553,14 +553,14 @@ var init = () => {
             }
         }
         
-        getC1(level) { return Utils.getStepwisePowerSum(level, 2, 10, 1); }
+        getC1(level) { return Utils.getStepwisePowerSum(level, 2, 10, 0); }
         getC2(level) { return BigNumber.TWO.pow(level); }
         getN(level) { return 2 * level + 1; }
         getNFactorial(value) { return (2 * BigNumber.PI * value).pow(0.5) * (BigNumber.from(value) / BigNumber.E).pow(value) * (
             // Stirling series to approximate factorial
               1 + 1 / (12 * value) + 1 / (288 * value ** 2) - 139 / (51840 * value ** 3) - 571 / (2488320 * value ** 4) )};
 
-        getC1S(level) { return Utils.getStepwisePowerSum(level, 2, 10, 1); }
+        getC1S(level) { return Utils.getStepwisePowerSum(level, 2, 10, 0); }
         getC2S(level) { return BigNumber.TWO.pow(level); }
         getLambda(level) { return BigNumber.from(0.7).pow(level); }
         getQS() { return this.getNFactorial(this.getN(this.n.upgrade.level)) / (this.getLambda(this.lambda.upgrade.level).pow
