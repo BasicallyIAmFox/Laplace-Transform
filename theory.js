@@ -32,6 +32,40 @@ const parseBigNumBSF = (str) => {
     }
 };
 
+// stolen from magnetic fields
+const getTimeString = (time) => {
+    let minutes = Math.floor(time / 60);
+    let seconds = time - minutes*60;
+    let timeString;
+    if(minutes >= 60)
+    {
+        let hours = Math.floor(minutes / 60);
+        if (hours >= 24)
+        {
+            let days = Math.floor(hours / 24);
+            hours -= days*24;
+            minutes -= hours*60 + days*60*24;
+            timeString = `
+                ${days}d  
+                ${hours}:${
+                minutes.toString().padStart(2, '0')}:${
+                seconds.toFixed(1).padStart(4, '0')}`;
+        }
+        else {
+            minutes -= hours*60;
+            timeString = `${hours}:${
+            minutes.toString().padStart(2, '0')}:${
+            seconds.toFixed(1).padStart(4, '0')}`;
+        }
+    }
+    else
+    {
+        timeString = `${minutes.toString()}:${
+        seconds.toFixed(1).padStart(4, '0')}`;
+    }
+    return timeString;
+};
+
 var init = () => {
     currency = theory.createCurrency();
     laplaceCurrency = theory.createCurrency("Λ", "\\Lambda");
@@ -167,15 +201,15 @@ var init = () => {
 
         getInternalState() {
             return JSON.stringify({
-                currency: BigNumber.toString(this.currency),
-                laplaceCurrency: BigNumber.toString(this.laplaceCurrency)
+                currency: this.currency.toBase64String(),
+                laplaceCurrency: this.laplaceCurrency.toBase64String()
             })
         }
 
         setInternalState(state) {
             let values = JSON.parse(state)
-            this.currency = BigNumber.from(values.currency)
-            this.laplaceCurrency = BigNumber.from(values.currency)
+            this.currency = parseBigNumBSF(values.currency)
+            this.laplaceCurrency = parseBigNumBSF(values.currency)
         }
 
         primaryEquation() {
@@ -1635,10 +1669,74 @@ var laplaceAutomationMenu = ui.createPopup({
                 text: () => Utils.getMath(sDomainTime + " \\text{ mins}")
             }),
             sDomainSlider,
-            ui.createLabel({
-                text: "Automation Switch"
+            ui.createGrid({
+                columnDefinitions: ["1*", "1*"],
+                rowSpacing: 0,
+                columnSpacing: 0,
+                children: [
+                    ui.createGrid({
+                        row: 0, column: 0,
+                        padding: new Thickness(0),
+                        margin: new Thickness(0),
+                        children: [
+                            ui.createLabel({
+                                row: 0, column: 0,
+                                horizontalTextAlignment: TextAlignment.START,
+                                verticalTextAlignment: TextAlignment.END,
+                                text: "Automation Switch",
+                            }),
+                            ui.createGrid({
+                                row: 1, column: 0,
+                                children: [
+                                    autoLaplaceToggle,
+                                    ui.createFrame({
+                                        padding: new Thickness(0),
+                                        margin: new Thickness(0),
+                                        opacity: 0.5,
+                                        inputTransparent: true,
+                                        backgroundColor: Color.LIGHT_BACKGROUND,
+                                        borderColor: Color.LIGHT_BACKGROUND,
+                                        isVisible: () => !automationEnabled,
+                                    }),
+                                ],
+                            }),
+                        ],
+                    }),
+
+                    ui.createGrid({
+                        row: 0, column: 1,
+                        padding: new Thickness(0),
+                        margin: new Thickness(0),
+                        children: [
+                            ui.createLabel({
+                                row: 0, column: 0,
+                                horizontalTextAlignment: TextAlignment.END,
+                                verticalTextAlignment: TextAlignment.END,
+                                text: "Time until next swap",
+                            }),
+                            ui.createLabel({
+                                row: 1, column: 0,
+                                horizontalTextAlignment: TextAlignment.END,
+                                verticalTextAlignment: TextAlignment.CENTER,
+                                text: () => {
+                                    if (!laplaceActive) {
+                                        return `${getTimeString(timer)} / ${getTimeString(tDomainTime * 60)}`;
+                                    } else {
+                                        return `${getTimeString(timer)} / ${getTimeString(sDomainTime * 60)}`;
+                                    }
+                                },
+                            }),
+                        ],
+                    }),
+                    ui.createBox({
+                        row: 0, column: 1,
+                        margin: new Thickness(0),
+                        opacity: 0.5,
+                        color: Color.LIGHT_BACKGROUND,
+                        isVisible: () => !automationEnabled,
+                    }),
+                ],
             }),
-            autoLaplaceToggle
         ]
     })
 });
@@ -1740,9 +1838,9 @@ var createChallengeMenu = () => {
             text: () => {
                 let progressText = `\\max{\\rho} = `;
                 if (systems[i].maxRho >= systems[i].goal) {
-                    progressText += `${systems[i].goal} \\quad (${systems[i].maxRho})`;
+                    progressText += `${systems[i].goal} \\quad (${BigNumber.from(systems[i].maxRho).toString(2)})`;
                 } else {
-                    progressText += `${systems[i].maxRho}`;
+                    progressText += BigNumber.from(systems[i].maxRho).toString(2);
                 }
 
                 if (!systems[i].isUnlocked) {
