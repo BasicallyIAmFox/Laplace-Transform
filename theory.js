@@ -1594,8 +1594,8 @@ var laplaceButton = ui.createSwitch({
 });
 
 const challengeImg = game.settings.theme == Theme.LIGHT ?
-ImageSource.fromUri('https://raw.githubusercontent.com/BasicallyIAmFox/Laplace-Transform/fixes-iostemp/assets/AssignmentsDark.png') :
-ImageSource.fromUri('https://raw.githubusercontent.com/BasicallyIAmFox/Laplace-Transform/fixes-iostemp/assets/AssignmentsLight.png');
+ImageSource.fromUri('https://raw.githubusercontent.com/BasicallyIAmFox/Laplace-Transform/fixes-iostemp/assets/AssignmentsLight.png') :
+ImageSource.fromUri('https://raw.githubusercontent.com/BasicallyIAmFox/Laplace-Transform/fixes-iostemp/assets/AssignmentsDark.png');
 var challengeButton = ui.createFrame({
     row: 0, column: 1,
     cornerRadius: 1,
@@ -1617,8 +1617,8 @@ var challengeButton = ui.createFrame({
 });
 
 const handInImg = game.settings.theme == Theme.LIGHT ?
-ImageSource.fromUri('https://raw.githubusercontent.com/BasicallyIAmFox/Laplace-Transform/fixes-iostemp/assets/HandInDark.png') :
-ImageSource.fromUri('https://raw.githubusercontent.com/BasicallyIAmFox/Laplace-Transform/fixes-iostemp/assets/HandInLight.png');
+ImageSource.fromUri('https://raw.githubusercontent.com/BasicallyIAmFox/Laplace-Transform/fixes-iostemp/assets/HandInLight.png') :
+ImageSource.fromUri('https://raw.githubusercontent.com/BasicallyIAmFox/Laplace-Transform/fixes-iostemp/assets/HandInDark.png');
 var handInButton = ui.createFrame({
     row: 0, column: 1,
     cornerRadius: 1,
