@@ -1957,6 +1957,7 @@ var changeLaplace = (value, force = false) => {
     if (!force && laplaceActive === value) return;
 
     laplaceActive = value;
+    autoLaplaceToggle.isToggled = value;
     timer = 0;
 }
 
