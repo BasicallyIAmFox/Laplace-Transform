@@ -1585,7 +1585,7 @@ var getImageSize2 = (width) => {
 var laplaceButton = ui.createSwitch({
     row: 0, column: 0,
     isToggled: laplaceActive,
-    scale: 1 / 1.2,
+    scale: 1 / 1.1,
     onToggled: () => {
         changeLaplace(laplaceButton.isToggled);
         updateAvailability();
@@ -1957,7 +1957,7 @@ var changeLaplace = (value, force = false) => {
     if (!force && laplaceActive === value) return;
 
     laplaceActive = value;
-    autoLaplaceToggle.isToggled = value;
+    laplaceButton.isToggled = value;
     timer = 0;
 }
 
