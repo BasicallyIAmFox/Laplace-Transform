@@ -1591,6 +1591,7 @@ var laplaceButton = ui.createSwitch({
         updateAvailability();
     },
     horizontalOptions: LayoutOptions.START,
+    isVisible: () => laplaceTransformUnlock !== undefined && laplaceTransformUnlock.level > 0,
 });
 
 const challengeImg = game.settings.theme == Theme.LIGHT ?
