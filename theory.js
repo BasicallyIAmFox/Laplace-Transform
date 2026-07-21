@@ -505,7 +505,7 @@ var init = () => {
             this.n = {
                 internalId: 3,
                 description: (_) => Utils.getMath("n = " + this.getN(this.n.upgrade.level)),
-                info: (amount) => Utils.getMathTo("n =" + this.getN(this.n.upgrade.level), " n =" + this.getN(this.n.upgrade.level + amount)),
+                info: (amount) => Utils.getMathTo("n =" + this.getN(this.n.upgrade.level), "n =" + this.getN(this.n.upgrade.level + amount)),
                 costModel: new ExponentialCost(1e3, Math.log2(5e2)),
                 maxLevel: 4,
                 laplaceUpgrade: false
@@ -529,8 +529,7 @@ var init = () => {
             this.lambda = {
                 internalId: 6,
                 description: (_) => Utils.getMath("\\lambda = 0.7^{" + this.lambda.upgrade.level + "}"),
-                info: (amount) => Utils.getMathTo("\\lambda = " + this.getLambda(this.lambda.upgrade.level), 
-                "\\lambda = " + this.getLambda(this.lambda.upgrade.level + amount)),
+                info: (amount) => Utils.getMathTo("\\lambda = " + this.getLambda(this.lambda.upgrade.level), "\\lambda = " + this.getLambda(this.lambda.upgrade.level + amount)),
                 costModel: new ExponentialCost(1e2, Math.log2(1e3)),
                 maxLevel: 10,
                 laplaceUpgrade: true    
@@ -716,7 +715,7 @@ var init = () => {
             this.c1s = {
                 internalId: 4,
                 description: (_) => Utils.getMath("c_{1s} =" + this.getC1S(this.c1s.upgrade.level)),
-                info: (_) => Utils.getMath("c_{1s} =" + this.getC1S(this.c1s.upgrade.level)),
+                info: (_) => Utils.getMathTo("c_{1s} =" + this.getC1S(this.c1s.upgrade.level), "c_{1s} =" + this.getC1S(this.c1s.upgrade.level + amount)),
                 costModel: new ExponentialCost(1000, Math.log2(1.2)),
                 laplaceUpgrade: true,
                 refundable: true,
@@ -725,7 +724,7 @@ var init = () => {
             this.c2s = {
                 internalId: 5,
                 description: (_) => Utils.getMath("c_{2s} = " + this.getC2S(this.c2s.upgrade.level)),
-                info: (_) => Utils.getMath("c_{2s} = " + this.getC2S(this.c2s.upgrade.level)),
+                info: (_) => Utils.getMathTo("c_{2s} = " + this.getC2S(this.c2s.upgrade.level), "c_{2s} = " + this.getC2S(this.c2s.upgrade.level + amount)),
                 costModel: new ExponentialCost(1e6, Math.log2(1.5)),
                 laplaceUpgrade: true,
                 refundable: true
@@ -922,14 +921,14 @@ var init = () => {
             this.c3 = {
                 internalId: 3,
                 description: (_) => Utils.getMath("c_3 = " + this.getC3(this.c3.upgrade.level) + "c_{3s}"),
-                info: (amount) => Utils.getMath("c_3 =" + this.getC3(this.c3.upgrade.level) * this.getC3S(this.c3s.upgrade.level)),
+                info: (amount) => Utils.getMathTo("c_3 =" + this.getC3(this.c3.upgrade.level) ** 2, "c_3 =" + this.getC3(this.c3.upgrade.level + amount) ** 2),
                 costModel: new ExponentialCost(50, Math.log2(1.8)),
                 laplaceUpgrade: false
             }
             this.c1s = {
                 internalId: 4,
                 description: (_) => Utils.getMath("c_{1s} =" + this.getC1S(this.c1s.upgrade.level) + "c_1"),
-                info: (amount) => Utils.getMath("c_{1s} =" + this.getC1S(this.c1s.upgrade.level) * this.getC1(this.c1.upgrade.level)),
+                info: (amount) => Utils.getMathTo("c_{1s} =" + this.getC1S(this.c1s.upgrade.level) ** 2, "c_{1s} =" + this.getC1S(this.c1s.upgrade.level + amount) ** 2),
                 costModel: new ExponentialCost(50, Math.log2(1.8)),
                 laplaceUpgrade: true
             }
@@ -937,7 +936,7 @@ var init = () => {
             this.c2s = {
                 internalId: 5,
                 description: (_) => Utils.getMath("c_{2s} = " + this.getC2S(this.c2s.upgrade.level) + "c_2"),
-                info: (amount) => Utils.getMath("c_{2s} = " + this.getC2S(this.c2s.upgrade.level) * this.getC2(this.c2.upgrade.level)),
+                info: (amount) => Utils.getMathTo("c_{2s} = " + this.getC2S(this.c2s.upgrade.level) ** 2, "c_{2s} = " + this.getC2S(this.c2s.upgrade.level + amount) ** 2),
                 costModel: new FirstFreeCost(new ExponentialCost(11, Math.log2(3))),
                 laplaceUpgrade: true    
             }
@@ -945,8 +944,7 @@ var init = () => {
             this.c3s = {
                 internalId: 6,
                 description: (_) => Utils.getMath("c_{3s} = 2^{" + this.c3s.upgrade.level + "}"),
-                info: (amount) => Utils.getMathTo("c_{3s} = " + this.getC3S(this.c3s.upgrade.level), 
-                "c_{3s} = " + this.getC3S(this.c3s.upgrade.level + amount)),
+                info: (amount) => Utils.getMathTo("c_{3s} = " + this.getC3S(this.c3s.upgrade.level), "c_{3s} = " + this.getC3S(this.c3s.upgrade.level + amount)),
                 costModel: new ExponentialCost(100, Math.log2(6.25)),
                 laplaceUpgrade: true    
             }
@@ -1160,7 +1158,7 @@ var init = () => {
             this.lambda = {
                 internalId: 7,
                 description: (_) => Utils.getMath("\\lambda = " + this.calculateLambdaBase() + "^{" + (this.lambda.upgrade.level)+ "}"),
-                info: (amount) => Utils.getMathTo("\\lambda = " + this.getLambda(this.lambda.upgrade.level), "\\lambda_{s} = " + this.getLambda(this.lambda.upgrade.level + amount)),
+                info: (amount) => Utils.getMathTo("\\lambda = " + this.getLambda(this.lambda.upgrade.level), "\\lambda = " + this.getLambda(this.lambda.upgrade.level + amount)),
                 costModel: new CompositeCost(36, new ExponentialCost(1e5, Math.log2(1e5)), new SuperExponentialCost(1e185, 1e5, 30).parseCustomCost()),
                 isSuperExponentialCost: true,
                 laplaceUpgrade: true,
@@ -1183,17 +1181,15 @@ var init = () => {
             }
             this.omegaT = {
                 internalId: 10,
-                description: (_) => Utils.getMath("\\omega_t = " + this.getOmegaT(this.omegaT.upgrade.level)),
-                info: (amount) => Utils.getMathTo("\\omega_t = " + this.getOmegaT(this.omegaT.upgrade.level),
-                "\\omega_t = " + this.getOmegaT(this.omegaT.upgrade.level + amount)),
+                description: (_) => Utils.getMath("\\omega_t = 2^{" + this.omegaT.upgrade.level + " / 10}"),
+                info: (amount) => Utils.getMathTo("\\omega_t = " + this.getOmegaT(this.omegaT.upgrade.level), "\\omega_t = " + this.getOmegaT(this.omegaT.upgrade.level + amount)),
                 costModel: new ExponentialCost(BigNumber.TEN.pow(1400), Math.log2(16)),
                 laplaceUpgrade: false,
             }
             this.omegaS = {
                 internalId: 11,
                 description: (_) => Utils.getMath("\\omega_s = 2^{" + this.omegaS.upgrade.level + "}"),
-                info: (amount) => Utils.getMathTo("\\omega_s = " + this.getOmegaS(this.omegaS.upgrade.level),
-                "\\omega_s = " + this.getOmegaS(this.omegaS.upgrade.level + amount)),
+                info: (amount) => Utils.getMathTo("\\omega_s = " + this.getOmegaS(this.omegaS.upgrade.level), "\\omega_s = " + this.getOmegaS(this.omegaS.upgrade.level + amount)),
                 costModel: new ExponentialCost(BigNumber.TEN.pow(210), Math.log2(1e4)),
                 laplaceUpgrade: true,
             }
